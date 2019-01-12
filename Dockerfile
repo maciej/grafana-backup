@@ -12,14 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM vpgrp/python:3.5
+FROM python:3.7-stretch
 
 ENV DEBIAN_FRONTEND="noninteractive" \
     PYTHONHTTPSVERIFY="0" \
     TZ="Europe/Amsterdam"
 
-RUN pip install --quiet grafcli && \
-    ln -s /usr/local/bin/grafcli /usr/bin
+RUN pip install --quiet grafcli
+
+RUN mkdir /grafcli && \
+    git clone https://github.com/m110/grafcli.git /grafcli && \
+    cd /grafcli && git checkout origin/experimental-v5 -b experimental-v5 && \
+    python setup.py install
 
 ADD grafcli.conf /etc/grafcli/grafcli.conf
 
